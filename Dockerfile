@@ -1,78 +1,20 @@
-# docker/Dockerfile
-FROM php:7.4-fpm
+FROM php:7.3.6-fpm-alpine3.9
+RUN apk add --no-cache openssl bash nodejs npm postgresql-dev
+RUN docker-php-ext-install bcmath pdo pdo_pgsql
 
-ARG APCU_VERSION=5.1.18
-
-LABEL Maintainer="Oliver Adria <oliver@adria.dev>" \
-      Description="Base setup for web development with PHP and PostgreSQL."
-
-# Get frequently used tools
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libicu-dev \
-    libzip-dev \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    libonig-dev \
-    locales \
-    zip \
-    unzip \
-    jpegoptim optipng pngquant gifsicle \
-    vim \
-    git \
-    curl \
-    wget \
-    zsh
-
-RUN docker-php-ext-configure zip
-
-RUN docker-php-ext-install \
-        bcmath \
-        mbstring \
-        pcntl \
-        intl \
-        zip \
-        opcache
-
-# apcu for caching, xdebug for debugging and also phpunit coverage
-RUN pecl install \
-        apcu-${APCU_VERSION} \
-        xdebug \
-    && docker-php-ext-enable \
-        apcu \
-        xdebug
-
-
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# php-cs-fixer tool
-RUN wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O /usr/local/bin/php-cs-fixer
-RUN chmod +x /usr/local/bin/php-cs-fixer
-
-# Copy existing app directory
-COPY . /var/www
 WORKDIR /var/www
 
+RUN rm -rf /var/www/html
+RUN ln -s public html
 
-# Configure non-root user.
-ARG PUID=1000
-ENV PUID ${PUID}
-ARG PGID=1000
-ENV PGID ${PGID}
 
-RUN groupmod -o -g ${PGID} www-data && \
-    usermod -o -u ${PUID} -g www-data www-data
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-RUN chown -R www-data:www-data /var/www
 
-# Copy and run composer
-# COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-# RUN composer install
+COPY . /var/www
 
-# For Laravel Installations
-#RUN php artisan key:generate
+RUN chmod -R 777 /var/www/storage
 
-EXPOSE 8080
+EXPOSE 9000
 
-CMD ["php-fpm"]
+ENTRYPOINT [ "php-fpm" ]
