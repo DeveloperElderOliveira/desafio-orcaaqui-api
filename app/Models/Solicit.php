@@ -28,29 +28,25 @@ use Illuminate\Database\Eloquent\Model;
 class Solicit extends Model
 {
 	protected $table = 'solicits';
+	protected $dateFormat = 'U';
 
 	protected $casts = [
-		'quantidade' => 'int',
-		'product_id' => 'int',
 		'stauts' => 'int',
-		'unit_id' => 'int'
 	];
 
 	protected $fillable = [
 		'observacao',
-		'quantidade',
-		'product_id',
 		'status',
-		'unit_id'
 	];
 
-	public function product()
+	public function getStatusAttribute($value){
+		return $value == 1 ? 'APROVADO' : 'RECUSADO';
+	}
+	
+	public function products()
 	{
-		return $this->belongsTo(Product::class);
+		return $this->belongsToMany(Product::class)
+					->withTimestamps();
 	}
 
-	public function unit()
-	{
-		return $this->belongsTo(Unit::class);
-	}
 }

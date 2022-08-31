@@ -25,10 +25,7 @@ class SolicitRequest extends FormRequest
     {
         return [
             'observacao' => 'required|min:3',
-            'quantidade' => 'required',
-            'product_id' => 'required',
-            'status' => 'required',
-            'unit_id' => 'required'
+            'produtos' => 'required'
         ];
     }
 
@@ -36,10 +33,7 @@ class SolicitRequest extends FormRequest
     {
         return [
             'observacao.required' => 'Observação deve ser preenchido.',
-            'quantidade.required' => 'Quantidade deve ser preenchido.',
-            'product_id.required' => 'Produto deve ser preenchido.',
-            'unit_id.required' => 'Unidade deve ser preenchido.',
-            'status.required' => 'Status deve ser preenchido',
+            'produtos.required' => 'Produtos deve ser preenchido.',
 
             'observacao.min' => 'Mínimo 3 caracteres',
         ];

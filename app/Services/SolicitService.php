@@ -13,12 +13,14 @@ class SolicitService {
     }
 
     public function index(){
-        $solicits = $this->repository->with('product','unit')->get();
+        $solicits = $this->repository->with(['products'])->get();
         return $solicits;
     }
 
     public function store($content){
+        
         $solicit = $this->repository->create($content);
+        $solicit->products()->attach($content['produtos']);
         return $solicit;
     }
 }

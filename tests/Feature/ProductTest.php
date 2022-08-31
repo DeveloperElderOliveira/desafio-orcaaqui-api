@@ -32,7 +32,7 @@ class ProductTest extends TestCase
 
         $response = $this->postJson('/api/product',[
             'Authorization' => "Bearer {$response_auth["access_token"]}",
-            "descricao" => "Cabo Flexível Antichamas Flexsil",
+            "descricao" => "Cabo Flexível Antichamas",
             "preco" => 150.35,
             "category_id" => 1
         ]);

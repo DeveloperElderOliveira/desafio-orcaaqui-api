@@ -12,12 +12,12 @@ class SolicitTest extends TestCase
     public function test_store_solicitacao_sem_token_retorna_nao_autenticado()
     {
         $response = $this->postJson('/api/solicit',[
-            "observacao" => "Solicitação Orçamento para compra de Cabo Flexível Antichamas Flexsil ",
-            "quantidade" => 15,
-            "product_id" => 1,
-            "unit_id" => 1,
-            "status" => 1
-        ]);
+            "produtos" => [
+                    ["product_id"=>1,"quantidade"=>"1","unit_id"=>1],
+                    ["product_id"=>1,"quantidade"=>"2","unit_id"=>2]
+                ],
+            "observacao"=>"teste",
+            "status"=>1]);
 
         $response->assertStatus(401)
         ->assertExactJson([
@@ -34,13 +34,12 @@ class SolicitTest extends TestCase
         $response_auth = $this->postJson('/api/login', $payload);
 
         $response = $this->postJson('/api/solicit',[
-            'Authorization' => "Bearer {$response_auth["access_token"]}",
-            "observacao" => "Solicitação Orçamento para compra de Cabo Flexível Antichamas Flexsil ",
-            "quantidade" => 15,
-            "product_id" => 1,
-            "unit_id" => 1,
-            "status" => 1
-        ]);
+            "produtos" => [
+                    ["product_id"=>1,"quantidade"=>"1","unit_id"=>1],
+                    ["product_id"=>1,"quantidade"=>"2","unit_id"=>2]
+                ],
+            "observacao"=>"Primeiro Orçamento do Mês.",
+            "status"=>1]);
 
         $response->assertStatus(200)
         ->assertJsonStructure(['success']);

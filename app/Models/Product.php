@@ -47,6 +47,7 @@ class Product extends Model
 
 	public function solicits()
 	{
-		return $this->hasMany(Solicit::class);
+		return $this->belongsToMany(Solicit::class)
+					->withTimestamps();
 	}
 }

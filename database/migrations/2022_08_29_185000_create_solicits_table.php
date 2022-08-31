@@ -16,10 +16,7 @@ class CreateSolicitsTable extends Migration
         Schema::create('solicits', function (Blueprint $table) {
             $table->id();
             $table->string('observacao');
-            $table->integer('quantidade');
             $table->integer('status');
-            $table->foreignId('product_id')->constrained();
-            $table->foreignId('unit_id')->constrained();
             $table->timestamps();
         });
     }
